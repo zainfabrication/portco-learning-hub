@@ -4,121 +4,149 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PortCo Learning Hub | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">PL</div>
-      <div>
-        <h1>PortCo Learning Hub</h1>
-        <p class="sub">Content development command centre &middot; all portcos, projects, files &amp; communications</p>
+<div class="app">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="logo"><span class="mark">PL</span><span>PORTCO<b>HUB</b></span></div>
+
+    <div class="business">
+      <span class="bolt">&#9889;</span>
+      <select id="fPortco"><option value="">ALL PORTCOS</option></select>
+    </div>
+
+    <nav>
+      <a href="#top" class="active"><i>&#9638;</i>DASHBOARD</a>
+      <a href="#sec-portcos"><i>&#9673;</i>PORTCOS</a>
+      <a href="#sec-projects"><i>&#9776;</i>PROJECTS</a>
+      <a href="#sec-comms"><i>&#9993;</i>COMMUNICATIONS</a>
+      <a href="#sec-files"><i>&#128196;</i>FILES</a>
+      <hr />
+      <a href="#sec-workload"><i>&#9881;</i>WORKLOAD</a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="small">Data source</div>
+      <div id="sourceName">data.xlsx</div>
+      <div class="small">Last refreshed <span id="lastRefresh">–</span></div>
+    </div>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <div class="main" id="top">
+    <header class="topbar">
+      <div class="search"><span>&#9906;</span><input id="fSearch" type="search" placeholder="Search project name or ID" /></div>
+      <div class="top-actions">
+        <span id="syncStatus" class="sync">Loading…</span>
+        <button id="refreshBtn" class="icon-btn" title="Reload data.xlsx">&#8635;</button>
+        <label class="icon-btn" title="Load an Excel file from your computer">&#8679;<input type="file" id="fileInputTop" accept=".xlsx,.xls" hidden /></label>
+        <div class="avatar">AD</div>
       </div>
-    </div>
-    <div class="actions">
-      <span id="syncStatus" class="sync">Loading data…</span>
-      <button id="refreshBtn" class="btn ghost" title="Reload data.xlsx">&#8635; Refresh</button>
-      <label class="btn primary">
-        &#8679; Load Excel
-        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden />
-      </label>
-    </div>
-  </header>
+    </header>
 
-  <section class="filters">
-    <label>Portco
-      <select id="fPortco"><option value="">All portcos</option></select>
-    </label>
-    <label>Status
-      <select id="fStatus"><option value="">All statuses</option></select>
-    </label>
-    <label>ID owner
-      <select id="fOwner"><option value="">All owners</option></select>
-    </label>
-    <label class="grow">Search
-      <input id="fSearch" type="search" placeholder="Project name or ID…" />
-    </label>
-    <button id="clearBtn" class="btn ghost">Clear filters</button>
-  </section>
+    <section class="page-head">
+      <h1>DASHBOARD</h1>
+      <div class="head-actions">
+        <div class="chip-select"><select id="fStatus"><option value="">All statuses</option></select></div>
+        <div class="chip-select"><select id="fOwner"><option value="">All owners</option></select></div>
+        <button id="clearBtn" class="ghost-btn">&#10005; Clear</button>
+        <label class="gold-btn">&#8853; Load Excel<input type="file" id="fileInput" accept=".xlsx,.xls" hidden /></label>
+      </div>
+    </section>
 
-  <main>
     <section class="kpis" id="kpis"></section>
 
-    <section class="grid two">
+    <!-- Row 1 -->
+    <section class="row r3">
       <div class="card">
-        <h2>Project pipeline by status</h2>
-        <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
-      </div>
-      <div class="card">
-        <h2>Projects per portco</h2>
-        <div class="chart-wrap"><canvas id="portcoChart"></canvas></div>
-      </div>
-    </section>
-
-    <section class="grid two">
-      <div class="card">
-        <h2>Communications per month</h2>
-        <div class="chart-wrap"><canvas id="commsChart"></canvas></div>
-      </div>
-      <div class="card">
-        <h2>Workload by ID owner (active projects)</h2>
-        <div class="chart-wrap"><canvas id="ownerChart"></canvas></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Portco overview <span class="hint">click a portco to filter</span></h2>
-      <div id="portcoCards" class="portco-cards"></div>
-    </section>
-
-    <section class="card">
-      <h2>Project status tracker</h2>
-      <div class="table-wrap">
-        <table id="projectTable">
-          <thead>
-            <tr>
-              <th>Health</th><th>Project</th><th>Portco</th><th>Type</th><th>Owner</th>
-              <th>Status</th><th>Progress</th><th>Due date</th><th>Feedback rounds</th><th>Priority</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <p class="legend">
-        <span class="dot green"></span> On track &nbsp;
-        <span class="dot amber"></span> Due within 7 days &amp; under 70% &nbsp;
-        <span class="dot red"></span> Overdue &nbsp;
-        <span class="dot blue"></span> Delivered &nbsp;
-        <span class="dot grey"></span> On hold
-      </p>
-    </section>
-
-    <section class="grid two">
-      <div class="card">
-        <h2>Recent communications</h2>
-        <div class="table-wrap short">
-          <table id="commsTable">
-            <thead><tr><th>Date</th><th>Portco</th><th>Project</th><th>Type</th><th>Direction</th><th>Subject</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <div class="card-h">PROJECT STATUS</div>
+        <div class="card-b donut-split">
+          <div class="donut-box"><canvas id="statusChart"></canvas><div class="center" id="statusCenter">0</div></div>
+          <ul class="legend" id="statusLegend"></ul>
         </div>
       </div>
       <div class="card">
-        <h2>Files stored</h2>
-        <div class="table-wrap short">
-          <table id="filesTable">
-            <thead><tr><th>File</th><th>Portco</th><th>Type</th><th>Version</th><th>Uploaded</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <div class="card-h">PROJECTS PER PORTCO</div>
+        <div class="card-b"><div class="chart-box"><canvas id="portcoChart"></canvas></div>
+          <div class="stat-foot"><span>Active projects</span><b id="activeTotal">0</b></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h">DELIVERY RATE</div>
+        <div class="card-b">
+          <div class="gauge-box"><canvas id="deliveryChart"></canvas><div class="center big" id="deliveryCenter">0%</div></div>
+          <div class="stat-foot"><span>Delivered</span><b id="deliveredOf">0 of 0</b></div>
         </div>
       </div>
     </section>
-  </main>
 
-  <footer>Data source: <strong id="sourceName">data.xlsx</strong> &middot; Last refreshed: <span id="lastRefresh">–</span></footer>
+    <!-- Row 2 -->
+    <section class="row r2">
+      <div class="card">
+        <div class="card-h">CONTENT PIPELINE <span class="sub">script &rarr; delivery</span></div>
+        <div class="card-b">
+          <div class="funnel-head"><span>Stage</span><span>Projects</span><span>Share</span></div>
+          <div id="funnel"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">COMMUNICATIONS PER MONTH</div>
+        <div class="card-b"><div class="chart-box tall"><canvas id="commsChart"></canvas></div></div>
+      </div>
+    </section>
 
-  <script src="app.js"></script>
+    <!-- Portcos -->
+    <section class="card" id="sec-portcos">
+      <div class="card-h">PORTCO OVERVIEW <span class="sub">click a portco to filter</span></div>
+      <div class="card-b"><div id="portcoCards" class="portco-cards"></div></div>
+    </section>
+
+    <!-- Projects -->
+    <section class="card" id="sec-projects">
+      <div class="card-h">PROJECT STATUS TRACKER</div>
+      <div class="card-b">
+        <div class="table-wrap">
+          <table id="projectTable">
+            <thead><tr><th>Health</th><th>Project</th><th>Portco</th><th>Type</th><th>Owner</th><th>Status</th><th>Progress</th><th>Due date</th><th>Feedback</th><th>Priority</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="rag">
+          <span><i class="dot red"></i>Overdue</span><span><i class="dot amber"></i>At risk (due ≤ 7 days, &lt; 70%)</span>
+          <span><i class="dot green"></i>On track</span><span><i class="dot gold"></i>Delivered</span><span><i class="dot grey"></i>On hold</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="row r2">
+      <div class="card" id="sec-comms">
+        <div class="card-h">RECENT COMMUNICATIONS</div>
+        <div class="card-b"><div class="table-wrap short">
+          <table id="commsTable"><thead><tr><th>Date</th><th>Portco</th><th>Project</th><th>Type</th><th>Direction</th><th>Subject</th></tr></thead><tbody></tbody></table>
+        </div></div>
+      </div>
+      <div class="card" id="sec-files">
+        <div class="card-h">FILES STORED</div>
+        <div class="card-b"><div class="table-wrap short">
+          <table id="filesTable"><thead><tr><th>File</th><th>Portco</th><th>Type</th><th>Version</th><th>Uploaded</th></tr></thead><tbody></tbody></table>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="card" id="sec-workload">
+      <div class="card-h">WORKLOAD BY ID OWNER <span class="sub">active projects</span></div>
+      <div class="card-b"><div class="chart-box"><canvas id="ownerChart"></canvas></div></div>
+    </section>
+
+    <footer>PortCo Learning Hub &middot; numbers update automatically from data.xlsx</footer>
+  </div>
+</div>
+<script src="app.js"></script>
 </body>
 </html>
