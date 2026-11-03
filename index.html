@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PortCo Learning Hub | Dashboard</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">PL</div>
+      <div>
+        <h1>PortCo Learning Hub</h1>
+        <p class="sub">Content development command centre &middot; all portcos, projects, files &amp; communications</p>
+      </div>
+    </div>
+    <div class="actions">
+      <span id="syncStatus" class="sync">Loading data…</span>
+      <button id="refreshBtn" class="btn ghost" title="Reload data.xlsx">&#8635; Refresh</button>
+      <label class="btn primary">
+        &#8679; Load Excel
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden />
+      </label>
+    </div>
+  </header>
+
+  <section class="filters">
+    <label>Portco
+      <select id="fPortco"><option value="">All portcos</option></select>
+    </label>
+    <label>Status
+      <select id="fStatus"><option value="">All statuses</option></select>
+    </label>
+    <label>ID owner
+      <select id="fOwner"><option value="">All owners</option></select>
+    </label>
+    <label class="grow">Search
+      <input id="fSearch" type="search" placeholder="Project name or ID…" />
+    </label>
+    <button id="clearBtn" class="btn ghost">Clear filters</button>
+  </section>
+
+  <main>
+    <section class="kpis" id="kpis"></section>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>Project pipeline by status</h2>
+        <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Projects per portco</h2>
+        <div class="chart-wrap"><canvas id="portcoChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>Communications per month</h2>
+        <div class="chart-wrap"><canvas id="commsChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Workload by ID owner (active projects)</h2>
+        <div class="chart-wrap"><canvas id="ownerChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Portco overview <span class="hint">click a portco to filter</span></h2>
+      <div id="portcoCards" class="portco-cards"></div>
+    </section>
+
+    <section class="card">
+      <h2>Project status tracker</h2>
+      <div class="table-wrap">
+        <table id="projectTable">
+          <thead>
+            <tr>
+              <th>Health</th><th>Project</th><th>Portco</th><th>Type</th><th>Owner</th>
+              <th>Status</th><th>Progress</th><th>Due date</th><th>Feedback rounds</th><th>Priority</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="legend">
+        <span class="dot green"></span> On track &nbsp;
+        <span class="dot amber"></span> Due within 7 days &amp; under 70% &nbsp;
+        <span class="dot red"></span> Overdue &nbsp;
+        <span class="dot blue"></span> Delivered &nbsp;
+        <span class="dot grey"></span> On hold
+      </p>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>Recent communications</h2>
+        <div class="table-wrap short">
+          <table id="commsTable">
+            <thead><tr><th>Date</th><th>Portco</th><th>Project</th><th>Type</th><th>Direction</th><th>Subject</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Files stored</h2>
+        <div class="table-wrap short">
+          <table id="filesTable">
+            <thead><tr><th>File</th><th>Portco</th><th>Type</th><th>Version</th><th>Uploaded</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Data source: <strong id="sourceName">data.xlsx</strong> &middot; Last refreshed: <span id="lastRefresh">–</span></footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
