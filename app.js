@@ -6,11 +6,19 @@ const CONFIG = {
   dataFile: "data.xlsx",
   autoRefreshSeconds: 60,
   dueSoonDays: 7,
-  statusOrder: ["Script Received", "In Development", "In Review", "Portco Feedback", "Delivered", "On Hold"],
-  // gold palette for the status donut (same order as statusOrder)
-  statusColors: ["#F3E2B8", "#E3C88B", "#C9A660", "#9C7E43", "#6E5A30", "#4A4A4A"]
+  statusOrder: ["Script Received", "In Development", "In Review", "Portco Feedback", "Delivered", "On Hold"]
 };
-const C = { gold: "#E3C88B", gold2: "#B8964A", gold3: "#7A6332", red: "#E26D5F", amber: "#E7A94F", green: "#7CC49A", grey: "#5E5E5E", track: "#262626", muted: "#8C8C8C", line: "#2B2B2B" };
+/* Colour sets for each theme (charts can't read CSS variables, so they live here too) */
+const THEMES = {
+  dark:  { gold: "#E3C88B", gold2: "#B8964A", gold3: "#7A6332", red: "#E26D5F", amber: "#E7A94F", green: "#7CC49A", grey: "#5E5E5E",
+           track: "#262626", muted: "#8C8C8C", line: "#2B2B2B", card: "#1B1B1B", tip: "#111111",
+           status: ["#F3E2B8", "#E3C88B", "#C9A660", "#9C7E43", "#6E5A30", "#4A4A4A"] },
+  light: { gold: "#2E5A8A", gold2: "#1F3A5F", gold3: "#7FA7D9", red: "#D64545", amber: "#E8A33D", green: "#2E9E6B", grey: "#9AA3B2",
+           track: "#EEF2F8", muted: "#6B7385", line: "#E3E7EF", card: "#FFFFFF", tip: "#1F3A5F",
+           status: ["#9AA3B2", "#3B7DD8", "#E8A33D", "#8E6CD8", "#2E9E6B", "#C9CED8"] }
+};
+let theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+let C = THEMES[theme];
 const HEALTH_COLOR = { gold: C.gold, green: C.green, amber: C.amber, red: C.red, grey: C.grey };
 const HEALTH_LABEL = { gold: "Delivered", green: "On track", amber: "At risk", red: "Overdue", grey: "On hold" };
 
@@ -20,14 +28,25 @@ let charts = {}, lastSignature = "", usingLocalFile = false;
 const $ = (id) => document.getElementById(id);
 const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
 
-/* ---------- Chart.js dark defaults ---------- */
-if (window.Chart) {
+/* ---------- Theme ---------- */
+function applyChartDefaults() {
+  if (!window.Chart) return;
   Chart.defaults.color = C.muted;
   Chart.defaults.borderColor = C.line;
   Chart.defaults.font.family = "Manrope, Segoe UI, sans-serif";
-  Chart.defaults.plugins.tooltip.backgroundColor = "#111";
+  Chart.defaults.plugins.tooltip.backgroundColor = C.tip;
   Chart.defaults.plugins.tooltip.borderColor = C.gold3;
   Chart.defaults.plugins.tooltip.borderWidth = 1;
+}
+function setTheme(t) {
+  theme = t; C = THEMES[t];
+  document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem("plh-theme", t); } catch (e) {}
+  document.querySelectorAll("#themeToggle span").forEach(s => s.classList.toggle("on", s.dataset.t === t));
+  applyChartDefaults();
+  const s = $("syncStatus").textContent;
+  if (s && !s.startsWith("Loading")) setSync(s.replace(/^[●⚠] /, ""), !s.startsWith("⚠"));
+  if (DATA.projects.length) render();
 }
 
 /* ---------- Load Excel ---------- */
@@ -161,9 +180,9 @@ function renderKPIs(projects, comms, files) {
 
 function renderStatus(projects) {
   const st = unique([...CONFIG.statusOrder, ...projects.map(p => p.Status)]).filter(s => projects.some(p => p.Status === s));
-  const colors = st.map(s => CONFIG.statusColors[CONFIG.statusOrder.indexOf(s)] || C.gold3);
+  const colors = st.map(s => C.status[CONFIG.statusOrder.indexOf(s)] || C.gold3);
   const counts = st.map(s => projects.filter(p => p.Status === s).length);
-  drawChart("statusChart", "doughnut", { labels: st, datasets: [{ data: counts, backgroundColor: colors, borderColor: "#1B1B1B", borderWidth: 4, spacing: 2 }] },
+  drawChart("statusChart", "doughnut", { labels: st, datasets: [{ data: counts, backgroundColor: colors, borderColor: C.card, borderWidth: 4, spacing: 2 }] },
     { cutout: "80%", plugins: { legend: { display: false } } });
   $("statusCenter").textContent = projects.length;
   $("statusLegend").innerHTML = st.map((s, i) => `<li><span class="sw" style="background:${colors[i]}"></span>${esc(s)} – ${counts[i]}</li>`).join("") || `<li class="empty">No projects</li>`;
@@ -305,6 +324,9 @@ $("refreshBtn").onclick = () => { usingLocalFile = false; loadFromRepo(true); };
 document.querySelectorAll("nav a").forEach(a => a.addEventListener("click", () => {
   document.querySelectorAll("nav a").forEach(x => x.classList.remove("active")); a.classList.add("active");
 }));
+
+$("themeToggle").onclick = () => setTheme(theme === "dark" ? "light" : "dark");
+setTheme(theme);
 
 loadFromRepo(true);
 setInterval(() => loadFromRepo(false), CONFIG.autoRefreshSeconds * 1000);

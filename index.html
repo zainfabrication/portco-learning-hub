@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script>try{var t=localStorage.getItem("plh-theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
@@ -44,6 +45,7 @@
     <header class="topbar">
       <div class="search"><span>&#9906;</span><input id="fSearch" type="search" placeholder="Search project name or ID" /></div>
       <div class="top-actions">
+        <div class="theme-toggle" id="themeToggle" title="Switch theme"><span data-t="dark">&#9790; Dark</span><span data-t="light">&#9728; Light</span></div>
         <span id="syncStatus" class="sync">Loading…</span>
         <button id="refreshBtn" class="icon-btn" title="Reload data.xlsx">&#8635;</button>
         <label class="icon-btn" title="Load an Excel file from your computer">&#8679;<input type="file" id="fileInputTop" accept=".xlsx,.xls" hidden /></label>

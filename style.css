@@ -1,9 +1,40 @@
 :root{
   --bg:#0E0E0E; --side:#141414; --card:#1B1B1B; --card-2:#232323; --line:#2B2B2B;
-  --gold:#E3C88B; --gold-2:#B8964A; --gold-3:#7A6332;
+  --gold:#E3C88B; --gold-2:#B8964A; --gold-3:#7A6332; --gold-hover:#EBD6A4;
+  --on-accent:#141414; --hover:#1E1E1E; --row-hover:#202020; --track:#333; --pill:#2A2A2A; --funnel-cell:#141414;
+  --accent-soft:rgba(227,200,139,.12);
   --text:#F2F2F2; --muted:#8C8C8C;
   --red:#E26D5F; --amber:#E7A94F; --green:#7CC49A; --grey:#5E5E5E;
 }
+/* ===== Light theme (original navy & white look) ===== */
+[data-theme="light"]{
+  --bg:#F4F6FA; --side:#FFFFFF; --card:#FFFFFF; --card-2:#F7F9FC; --line:#E3E7EF;
+  --gold:#2E5A8A; --gold-2:#1F3A5F; --gold-3:#7FA7D9; --gold-hover:#3D6FA6;
+  --on-accent:#FFFFFF; --hover:#EEF2F8; --row-hover:#FAFBFD; --track:#EEF2F8; --pill:#EEF2F8; --funnel-cell:#F0F3F8;
+  --accent-soft:#E8EFF8;
+  --text:#1D2433; --muted:#6B7385;
+  --red:#D64545; --amber:#E8A33D; --green:#2E9E6B; --grey:#9AA3B2;
+}
+[data-theme="light"] .card,[data-theme="light"] .kpi{box-shadow:0 1px 3px rgba(0,0,0,.05)}
+[data-theme="light"] .sidebar{background:linear-gradient(180deg,#1F3A5F,#2E5A8A);border-right:none}
+[data-theme="light"] .sidebar .logo,[data-theme="light"] .sidebar .side-foot{color:#fff}
+[data-theme="light"] .sidebar .logo b{color:#BFD6F2}
+[data-theme="light"] .sidebar .logo .mark,[data-theme="light"] nav a.active{background:#fff;color:#1F3A5F}
+[data-theme="light"] nav a{color:rgba(255,255,255,.75)}
+[data-theme="light"] nav a:hover{background:rgba(255,255,255,.12);color:#fff}
+[data-theme="light"] nav hr{border-top-color:rgba(255,255,255,.2)}
+[data-theme="light"] .business,[data-theme="light"] .side-foot{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+[data-theme="light"] .business select{color:#fff}
+[data-theme="light"] .business .bolt{color:#FFE08A}
+[data-theme="light"] .side-foot .small{color:rgba(255,255,255,.7)}
+[data-theme="light"] .business select option{background:#fff;color:#1D2433}
+[data-theme="light"] .f-stage.lead .t,[data-theme="light"] .f-stage.lead .s{color:#fff}
+
+/* Theme toggle switch */
+.theme-toggle{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:30px;padding:5px 6px;cursor:pointer;user-select:none}
+.theme-toggle span{font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;color:var(--muted);transition:.2s}
+.theme-toggle span.on{background:var(--gold);color:var(--on-accent)}
+body,.card,.kpi,.sidebar,.topbar{transition:background-color .25s,color .25s,border-color .25s}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:"Manrope","Segoe UI",system-ui,sans-serif;font-size:14px}
@@ -13,7 +44,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:"Manrope","Sego
 .sidebar{width:240px;flex-shrink:0;background:var(--side);border-right:1px solid var(--line);padding:22px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:18px;overflow-y:auto}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:2px;color:var(--text);font-size:15px;padding:4px 6px}
 .logo b{color:var(--gold)}
-.logo .mark{width:34px;height:34px;border-radius:10px;background:var(--gold);color:#141414;display:grid;place-items:center;font-size:13px;letter-spacing:0}
+.logo .mark{width:34px;height:34px;border-radius:10px;background:var(--gold);color:var(--on-accent);display:grid;place-items:center;font-size:13px;letter-spacing:0}
 .business{display:flex;align-items:center;gap:8px;background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
 .business .bolt{color:var(--gold)}
 .business select{flex:1;background:transparent;border:none;color:var(--text);font:700 12px "Manrope",sans-serif;letter-spacing:.5px;outline:none;cursor:pointer}
@@ -21,8 +52,8 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:"Manrope","Sego
 nav{display:flex;flex-direction:column;gap:4px}
 nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.6px;transition:.15s}
 nav a i{font-style:normal;width:18px;text-align:center;font-size:14px}
-nav a:hover{color:var(--text);background:#1E1E1E}
-nav a.active{background:var(--gold);color:#141414}
+nav a:hover{color:var(--text);background:var(--hover)}
+nav a.active{background:var(--gold);color:var(--on-accent)}
 nav hr{border:none;border-top:1px solid var(--line);margin:10px 0}
 .side-foot{margin-top:auto;font-size:12px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;line-height:1.6}
 .side-foot .small{color:var(--muted);font-size:11px}
@@ -37,7 +68,7 @@ nav hr{border:none;border-top:1px solid var(--line);margin:10px 0}
 .sync{font-size:11px;font-weight:600;padding:7px 12px;border-radius:20px;background:var(--card);border:1px solid var(--line)}
 .icon-btn{width:40px;height:40px;border-radius:50%;background:var(--card-2);border:1px solid var(--line);color:var(--text);display:grid;place-items:center;font-size:16px;cursor:pointer}
 .icon-btn:hover{border-color:var(--gold-2);color:var(--gold)}
-.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#141414;display:grid;place-items:center;font-weight:800;font-size:13px}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--on-accent);display:grid;place-items:center;font-weight:800;font-size:13px}
 
 .page-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin:6px 0 18px}
 h1{margin:0;color:var(--gold);font-size:22px;font-weight:800;letter-spacing:.5px}
@@ -45,8 +76,8 @@ h1{margin:0;color:var(--gold);font-size:22px;font-weight:800;letter-spacing:.5px
 .chip-select select{background:var(--card-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 12px;font:600 12px "Manrope",sans-serif;outline:none;cursor:pointer}
 .ghost-btn{background:var(--card-2);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:9px 12px;font:600 12px "Manrope",sans-serif;cursor:pointer}
 .ghost-btn:hover{color:var(--text)}
-.gold-btn{background:var(--gold);color:#141414;border-radius:8px;padding:9px 16px;font:800 12px "Manrope",sans-serif;cursor:pointer}
-.gold-btn:hover{background:#EBD6A4}
+.gold-btn{background:var(--gold);color:var(--on-accent);border-radius:8px;padding:9px 16px;font:800 12px "Manrope",sans-serif;cursor:pointer}
+.gold-btn:hover{background:var(--gold-hover)}
 
 /* KPIs */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
@@ -87,8 +118,8 @@ h1{margin:0;color:var(--gold);font-size:22px;font-weight:800;letter-spacing:.5px
 .f-stage .fill{position:absolute;inset:0 auto 0 0;background:var(--gold);opacity:.95}
 .f-stage .t{position:relative;font-weight:700;font-size:13px}
 .f-stage .s{position:relative;font-size:11px;color:var(--muted)}
-.f-stage.lead .t,.f-stage.lead .s{color:#141414}
-.f-cell{background:#141414;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:13px;clip-path:polygon(0 0,100% 0,100% 82%,50% 100%,0 82%)}
+.f-stage.lead .t,.f-stage.lead .s{color:var(--on-accent)}
+.f-cell{background:var(--funnel-cell);border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:13px;clip-path:polygon(0 0,100% 0,100% 82%,50% 100%,0 82%)}
 
 /* Portco cards */
 .portco-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
@@ -101,7 +132,7 @@ h1{margin:0;color:var(--gold);font-size:22px;font-weight:800;letter-spacing:.5px
 .pc .stats b{display:block;font-size:18px;color:var(--gold);font-weight:800}
 .pc .stats b.alert{color:var(--red)}
 .pc .meta{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
-.bar{height:5px;background:#333;border-radius:4px;overflow:hidden;margin-top:12px}
+.bar{height:5px;background:var(--track);border-radius:4px;overflow:hidden;margin-top:12px}
 .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold-2),var(--gold))}
 
 /* Tables */
@@ -110,23 +141,23 @@ h1{margin:0;color:var(--gold);font-size:22px;font-weight:800;letter-spacing:.5px
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{position:sticky;top:0;background:var(--card-2);color:var(--muted);font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase;text-align:left;padding:10px 12px;white-space:nowrap}
 td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
-tr:hover td{background:#202020}
+tr:hover td{background:var(--row-hover)}
 td small{color:var(--muted)}
 a{color:var(--gold)}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .dot.red{background:var(--red)} .dot.amber{background:var(--amber)} .dot.green{background:var(--green)} .dot.gold{background:var(--gold)} .dot.grey{background:var(--grey)}
-.pill{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;background:#2A2A2A;color:var(--text)}
+.pill{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;background:var(--pill);color:var(--text)}
 .pill.High{background:rgba(226,109,95,.15);color:var(--red)}
 .pill.Medium{background:rgba(231,169,79,.15);color:var(--amber)}
 .pill.Low{background:rgba(124,196,154,.15);color:var(--green)}
-.pill.st{background:rgba(227,200,139,.12);color:var(--gold)}
+.pill.st{background:var(--accent-soft);color:var(--gold)}
 .prog{display:flex;align-items:center;gap:8px;min-width:120px}
 .prog .bar{flex:1;margin:0}
 .rag{display:flex;flex-wrap:wrap;gap:18px;font-size:11.5px;color:var(--muted);margin:14px 0 0}
 .empty{color:var(--muted);text-align:center;padding:22px}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:10px 0 0}
 
-::-webkit-scrollbar{width:8px;height:8px} ::-webkit-scrollbar-thumb{background:#333;border-radius:8px} ::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar{width:8px;height:8px} ::-webkit-scrollbar-thumb{background:var(--track);border-radius:8px} ::-webkit-scrollbar-track{background:transparent}
 
 @media (max-width:1200px){.r3{grid-template-columns:1fr 1fr}.r3 .card:first-child{grid-column:1/-1}}
 @media (max-width:900px){.sidebar{display:none}.r2,.r3{grid-template-columns:1fr}.donut-split{flex-direction:column}}
